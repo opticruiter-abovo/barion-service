@@ -1,0 +1,23 @@
+services:
+  b2b-jobs-service:
+    image: node:18
+    volumes:
+      - "../:/home/node/dev"
+    working_dir: "/home/node/dev"
+    entrypoint: [ "npm", "run", "start:dev" ]
+    depends_on:
+      - abovo-db
+    links:
+      - abovo-db
+    container_name: jobs_service
+    expose:
+      - 8081
+    ports:
+      - "8081:8081"
+  abovo-db:
+    image: abovodb:3.0
+    container_name: abovo_db
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: breakline

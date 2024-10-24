@@ -1,0 +1,79 @@
+services:
+  b2b-user-service:
+    image: node:18
+    cpu_count: 4
+    volumes:
+      - "../b2b-user-service/:/home/node/dev"
+    working_dir: "/home/node/dev"
+    entrypoint: [ "npm", "run", "start:dev" ]
+    depends_on:
+      - abovo-db
+    links:
+      - abovo-db
+    container_name: user_service
+    expose:
+      - 8080
+    ports:
+      - "8080:8081"
+  b2b-ads-service:
+    image: node:18
+    cpu_count: 4
+    volumes:
+      - "../b2b-ads-service/:/home/node/dev"
+    working_dir: "/home/node/dev"
+    entrypoint: [ "npm", "run", "start:dev" ]
+    depends_on:
+      - abovo-db
+    links:
+      - abovo-db
+    container_name: ads_service
+    expose:
+      - 8081
+    ports:
+      - "8081:8081"
+  b2b-jobs-service:
+    image: node:18
+    cpu_count: 4
+    volumes:
+      - "../b2b-jobs-service/:/home/node/dev"
+    working_dir: "/home/node/dev"
+    entrypoint: [ "npm", "run", "start:dev" ]
+    depends_on:
+      - abovo-db
+    links:
+      - abovo-db
+    container_name: jobs_service
+    expose:
+      - 8082
+    ports:
+      - "8082:8081"
+  b2b-statistics-service:
+    image: node:18
+    cpu_count: 4
+    volumes:
+      - "../b2b-statistics-service/:/home/node/dev"
+    working_dir: "/home/node/dev"
+    entrypoint: [ "npm", "run", "start:dev" ]
+    depends_on:
+      - abovo-db
+    links:
+      - abovo-db
+    container_name: statistics_service
+    expose:
+      - 8083
+    ports:
+      - "8083:8081"
+  statistics-cache:
+    image: redis:7.4.0
+    container_name: statistics-cache
+    cpu_count: 2
+    links:
+      - b2b-statistics-service
+  abovo-db:
+    image: abovodb:latest
+    container_name: abovo_db
+    cpu_count: 2
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: breakline
